@@ -1,0 +1,15 @@
+﻿<Window x:Name="Page_Set_Work_Day" x:Class="Calculation_Vacation.Page_SWD"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Calculation_Vacation"
+        mc:Ignorable="d"
+        Title="График  работы" Height="450" Width="800" FontFamily="Times New Roman" ResizeMode="NoResize" Topmost="True">
+    <Grid Background="#FFBDBDBD" Focusable="True">
+        <DataGrid x:Name="My_DataGrid" HorizontalAlignment="Center" Height="293" VerticalAlignment="Top" Width="536" Loaded="My_DataGrid_Loaded" Margin="0,10,0,0" Initialized="My_DataGrid_Init" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" MinColumnWidth="50" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"/>
+
+    </Grid>
+
+</Window>
+    
