@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculation_Vacation"
         mc:Ignorable="d"
-        Title="График  работы" Height="450" Width="800" FontFamily="Times New Roman" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen">
+        Title="График  работы" Height="450" Width="800" FontFamily="Times New Roman" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Background="#FFBDBDBD" Focusable="True">
-        <DataGrid x:Name="My_DataGrid" HorizontalAlignment="Center" Height="293" VerticalAlignment="Top" Width="536" Loaded="My_DataGrid_Loaded" Margin="0,10,0,0" Initialized="My_DataGrid_Init" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" MinColumnWidth="50" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False" BeginningEdit="My_DataGrid_BeginningEdit" CellEditEnding="My_DataGrid_CellEditEnding" RowEditEnding="My_DataGrid_RowEditEnding" Language="ru"/>
-        <TextBlock x:Name="Txt_test" TextWrapping="Wrap" Text="123" Margin="34,346,329,28"/>
-        <Button Content="Button" Margin="528,346,116,42" Click="Button_Click"/>
+        <DataGrid x:Name="My_DataGrid" HorizontalAlignment="Center" Height="293" VerticalAlignment="Top" Width="538" Loaded="My_DataGrid_Loaded" Margin="0,10,0,0" Initialized="My_DataGrid_Init" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" MinColumnWidth="50" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False" BeginningEdit="My_DataGrid_BeginningEdit" CellEditEnding="My_DataGrid_CellEditEnding" RowEditEnding="My_DataGrid_RowEditEnding" Language="ru-RU" CanUserResizeRows="False" SelectionMode="Single"/>
+        <TextBlock x:Name="Txt_test" TextWrapping="Wrap" Margin="10,346,10,28"/>
+        <Button x:Name="Butt_to_Save_JSON" Content="Сохранить" Click="Butt_to_Save_JSON_Click" Width="{Binding ActualWidth, ElementName=Butt_For_Delet_JSON, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=Butt_For_Delet_JSON, Mode=OneWay}" RenderTransformOrigin="0.334,0.54" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="669,258,0,0"/>
+        <Button x:Name="Butt_For_Delet_JSON" Content="Удалить" Height="20" VerticalAlignment="Top" Click="Butt_For_Delet_JSON_Click" Width="90" HorizontalAlignment="Left" Margin="669,283,0,0"/>
 
     </Grid>
 

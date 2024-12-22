@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace Calculation_Vacation
                     CanUserReorder = false,
                     CanUserResize = false,
                     CanUserSort = false,
-                    FontSize = 12,
+                    FontSize = 13,
                     IsReadOnly = true,
                     Binding = new Binding("month")
           },
@@ -44,10 +45,10 @@ namespace Calculation_Vacation
                     CanUserReorder = false,
                     CanUserResize = false,
                     CanUserSort = false,
-                    FontSize = 12,
+                    FontSize = 13,
                     IsReadOnly = false,
-                    Binding = new Binding("start")
-                    
+                    Binding = new Binding {Path = new PropertyPath("start"), StringFormat ="dd.MMMM"}
+
           },
           new DataGridTextColumn()
           {
@@ -56,9 +57,9 @@ namespace Calculation_Vacation
                     CanUserReorder = false,
                     CanUserResize = false,
                     CanUserSort = false,
-                    FontSize = 12,
+                    FontSize = 13,
                     IsReadOnly = false,
-                    Binding = new Binding("stop")
+                    Binding = new Binding{Path = new PropertyPath("stop"), StringFormat ="dd.MMMM"}
           },
           new DataGridTextColumn()
           {
@@ -67,22 +68,22 @@ namespace Calculation_Vacation
                     CanUserReorder = false,
                     CanUserResize = false,
                     CanUserSort = false,
-                    FontSize = 12,
+                    FontSize = 13,
                     IsReadOnly = true,
                     Binding = new Binding("dayofwork")
           },
         };
 
-        private BindingList<Month_Work> MW_;
+        private BindingList<Month_Work> MW_ = new BindingList<Month_Work>();
 
         public class Month_Work : INotifyPropertyChanged
         {
-            private DateTime _start;
+            private DateTime? _start;
             private DateTime? _stop;
 
             public string month { get; set; }
 
-            public DateTime start
+            public DateTime? start
             {
                 get
                 {
@@ -95,7 +96,7 @@ namespace Calculation_Vacation
                         return;
                     }
                     _start = value;
-                    OnpropertiChang( "start" );
+                    OnpropertiChang("start");
                 }
             }
 
@@ -107,18 +108,18 @@ namespace Calculation_Vacation
                 }
                 set
                 {
-                    if( _stop == value)
+                    if (_stop == value)
                     {
                         return;
                     }
                     _stop = value;
-                    OnpropertiChang( "stop" );
+                    OnpropertiChang("stop");
                 }
             }
 
             public int dayofwork { get; }
 
-            public Month_Work( string txt )
+            public Month_Work(string txt)
             {
                 month = txt;
             }
@@ -127,7 +128,7 @@ namespace Calculation_Vacation
 
             private void OnpropertiChang(string txt = "")
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs (txt));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(txt));
             }
         }
 
@@ -135,93 +136,106 @@ namespace Calculation_Vacation
         {
             _dataSaver = new DataSaver();
             InitializeComponent();
-           
+
         }
 
         private void DataGrid_Set()
         {
-            for ( int i = 0; i < colum.Count; i++ )
+            for (int i = 0; i < colum.Count; i++)
             {
-                My_DataGrid.Columns.Add( colum[i] );
+                My_DataGrid.Columns.Add(colum[i]);
             }
         }
 
         public void DataGrid_Set_Wieth()
         {
             double wirth_1 = 0;
-            for ( int i = 0; i < this.My_DataGrid.Columns.Count; i++ )
+            for (int i = 0; i < this.My_DataGrid.Columns.Count; i++)
             {
                 wirth_1 += this.My_DataGrid.Columns[i].ActualWidth;
             }
             this.My_DataGrid.Width = wirth_1 + 15;
         }
 
-        private void My_DataGrid_Loaded( object sender, RoutedEventArgs e )
+        private void My_DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            DataGrid_Set_Wieth();            
-
+            DataGrid_Set_Wieth();
         }
 
-        private void MW__ListChanged( object? sender, ListChangedEventArgs e )
+        private void MW_ListChanged(object? sender, ListChangedEventArgs e)
         {
-            if (e.ListChangedType == ListChangedType.ItemChanged )
+            if (e.ListChangedType == ListChangedType.ItemChanged)
             {
-                Txt_test.Text = "sdsdsa";
+                Txt_test.Text = "Информация записанна";
             }
         }
 
-        private void My_DataGrid_Init( object sender, EventArgs e )
+        private void My_DataGrid_Init(object sender, EventArgs e)
         {
-            
+
             Month_Work_Set();
             DataGrid_Set();
-            MW_.ListChanged += MW__ListChanged;
+            MW_.ListChanged += MW_ListChanged;
         }
 
         private void Month_Work_Set()
         {
-            if ( _dataSaver.TableIsCreate )
+            if (_dataSaver.TableIsCreate)
             {
-                MW_ = _dataSaver.LoadDate();                
+                MW_ = _dataSaver.LoadDate();
                 My_DataGrid.ItemsSource = MW_;
             }
             else
             {
                 DateTime nowMonth = DateTime.Now;
-                MW_ = new BindingList<Month_Work>();
+                DateOnly dateOnly = new DateOnly(2024, 01, 01);
+                var test = dateOnly;
 
-                for ( int i = 1; i <= nowMonth.Month; i++ )
+                for (int i = 1; i <= nowMonth.Month; i++)
                 {
-                    MW_.Add( new Month_Work( nowMonth.ToString( "MMMM" ) ) );
+                    MW_.Add(new Month_Work(test.ToString("MMMM")));
+                    test = dateOnly.AddMonths(i);
                 }
                 My_DataGrid.ItemsSource = MW_;
             }
-            }
-
-        private void My_DataGrid_BeginningEdit( object sender, DataGridBeginningEditEventArgs e )
-        {
-            
         }
 
-        private void My_DataGrid_CellEditEnding( object sender, DataGridCellEditEndingEventArgs e )
+        private void My_DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            
 
         }
 
-        private void My_DataGrid_RowEditEnding( object sender, DataGridRowEditEndingEventArgs e )
+        private void My_DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            var ee = e.Row.Item as Month_Work;
-            ee.start = DateTime.Parse ("06.06.2666");
-            
 
 
         }
 
-        private void Button_Click( object sender, RoutedEventArgs e )
+        private void My_DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            Txt_test.Text = MW_[0].start.Date.ToShortDateString();
-            _dataSaver.SaveDate( MW_ );
+
+
+
+
+        }
+
+        private void Butt_For_Delet_JSON_Click(object sender, RoutedEventArgs e)
+        {
+            _dataSaver.DeletData();
+            Txt_test.Text = "База данных сброшена";
+        }
+
+        private void Butt_to_Save_JSON_Click(object sender, RoutedEventArgs e)
+        {
+            _dataSaver.SaveDate(MW_);
+            Txt_test.Text = "Сохранение прошло удачно";
+        }
+
+        private int DayWorkInMonth (DateTime dt1,  DateTime dt2)
+        {
+            var daywork = dt2 - dt1;
+            int day = daywork.Days;
+            return day;
         }
     }
 }

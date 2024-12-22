@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Error" Height="150" Width="300" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen">
     <Grid Background="#FFBDBDBD">
-        <TextBlock x:Name="Err_reason_txt" HorizontalAlignment="Center" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="280" FontFamily="Times New Roman" TextAlignment="Center" Margin="0,47,0,0"/>
+        <TextBlock x:Name="Err_reason_txt" HorizontalAlignment="Center" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="280" FontFamily="Times New Roman" TextAlignment="Center" Margin="0,47,0,0" FontSize="16" FontWeight="Bold"/>
         <Button Content="Закрыть" Margin="100,0,100,12" Click="Button_Click" Height="25" VerticalAlignment="Bottom"/>
 
     </Grid>

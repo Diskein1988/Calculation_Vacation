@@ -21,14 +21,14 @@
                 </TransformGroup>
             </TextBlock.RenderTransform><Run Language="ru-ru" Text="Прошло дней в году:"/></TextBlock>
         <TextBlock x:Name="gone_days" HorizontalAlignment="Left" Height="16" Margin="186,101,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" FontFamily="Times New Roman" FontWeight="Bold" Text="Day"/>
-        <TextBox x:Name="WorkDay" HorizontalAlignment="Left" Height="16" Margin="186,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" RenderTransformOrigin="0.5,0.575"/>
+        <TextBox x:Name="WorkDay" HorizontalAlignment="Left" Height="16" Margin="186,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" RenderTransformOrigin="0.5,0.575" Text="1"/>
         <TextBlock HorizontalAlignment="Left" Height="16" Margin="10,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" FontFamily="Times New Roman" TextAlignment="Right"><Run Text="Кол-во отработаных дней в году"/><Run Language="ru-ru" Text=":"/><LineBreak/><Run/></TextBlock>
         <Button x:Name="Calculate_Go" Content="Рассчитать" HorizontalAlignment="Left" Height="36" Margin="322,363,0,0" VerticalAlignment="Top" Width="163" Click="Button_Click_Calculate" Background="#FFDDDDDD" FontFamily="Times New Roman" FontWeight="Bold" FontSize="18" Foreground="#FFE23131"/>
         <TextBlock HorizontalAlignment="Left" Height="16" Margin="10,176,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" FontFamily="Times New Roman" TextAlignment="Right"><Run Language="ru-ru" Text="Дней основного отпуска:"/></TextBlock>
         <TextBlock HorizontalAlignment="Left" Height="16" Margin="10,197,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" FontFamily="Times New Roman" TextAlignment="Right"><Run Language="ru-ru" Text="Дней доп. отпуска:"/><LineBreak/><Run Language="ru-ru"/></TextBlock>
         <TextBlock x:Name="Day_OSN" HorizontalAlignment="Left" Height="16" Margin="186,175,0,0" VerticalAlignment="Top" Width="50" FontWeight="Bold" FontFamily="Times New Roman" Foreground="Red"/>
         <TextBlock x:Name="DAY_DOP" HorizontalAlignment="Left" Height="14" Margin="186,196,0,0" VerticalAlignment="Top" Width="50" FontFamily="Times New Roman" FontWeight="Bold" Foreground="Red"/>
-        <Button x:Name="Set_Work_Day" Content="Выбрать дни работы" HorizontalAlignment="Left" Height="22" Margin="10,140,0,0" VerticalAlignment="Top" Width="226" FontFamily="Times New Roman" FontWeight="Bold" Click="Button_Click_Set_Work_Day"/>
+        <Button x:Name="Set_Work_Day" Content="Выбрать дни работы" HorizontalAlignment="Left" Height="22" Margin="10,145,0,0" VerticalAlignment="Top" Width="226" FontFamily="Times New Roman" FontWeight="Bold" Click="Button_Click_Set_Work_Day"/>
 
     </Grid>
 </Window>

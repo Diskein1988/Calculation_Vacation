@@ -35,6 +35,7 @@ namespace Calculation_Vacation
             using (var reader = File.OpenText( PATH ))
             {
                 var faletxt = reader.ReadToEnd();
+
                 return JsonConvert.DeserializeObject<BindingList<Month_Work>>( faletxt );
             }
         }
@@ -45,6 +46,15 @@ namespace Calculation_Vacation
             {
                 string output = JsonConvert.SerializeObject( month_Works );
                 writer.WriteLine( output );
+            }
+        }
+
+        public void DeletData()
+        {
+            var FileData = File.Exists( PATH );
+            if (FileData)
+            {
+                File.Delete( PATH );
             }
         }
     }
