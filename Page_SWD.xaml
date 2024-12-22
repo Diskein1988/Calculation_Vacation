@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculation_Vacation"
         mc:Ignorable="d"
-        Title="График  работы" Height="450" Width="800" FontFamily="Times New Roman" ResizeMode="NoResize" Topmost="True">
+        Title="График  работы" Height="450" Width="800" FontFamily="Times New Roman" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterScreen">
     <Grid Background="#FFBDBDBD" Focusable="True">
-        <DataGrid x:Name="My_DataGrid" HorizontalAlignment="Center" Height="293" VerticalAlignment="Top" Width="536" Loaded="My_DataGrid_Loaded" Margin="0,10,0,0" Initialized="My_DataGrid_Init" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" MinColumnWidth="50" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"/>
+        <DataGrid x:Name="My_DataGrid" HorizontalAlignment="Center" Height="293" VerticalAlignment="Top" Width="536" Loaded="My_DataGrid_Loaded" Margin="0,10,0,0" Initialized="My_DataGrid_Init" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" MinColumnWidth="50" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False" BeginningEdit="My_DataGrid_BeginningEdit" CellEditEnding="My_DataGrid_CellEditEnding" RowEditEnding="My_DataGrid_RowEditEnding" Language="ru"/>
+        <TextBlock x:Name="Txt_test" TextWrapping="Wrap" Text="123" Margin="34,346,329,28"/>
+        <Button Content="Button" Margin="528,346,116,42" Click="Button_Click"/>
 
     </Grid>
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculation_Vacation"
         mc:Ignorable="d"
-        Title="Расчёт_Отпуска" Height="450" Width="800" ResizeMode="CanMinimize">
+        Title="Расчёт_Отпуска" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid Background="#FFBDBDBD">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>

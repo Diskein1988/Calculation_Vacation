@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,8 @@ namespace Calculation_Vacation
     /// </summary>
     public partial class Page_SWD : Window
     {
+        private DataSaver _dataSaver;
+
         private List<DataGridColumn> colum = new List<DataGridColumn>()
         {
           new DataGridTextColumn()
@@ -42,8 +45,9 @@ namespace Calculation_Vacation
                     CanUserResize = false,
                     CanUserSort = false,
                     FontSize = 12,
-                    //IsReadOnly = false,
+                    IsReadOnly = false,
                     Binding = new Binding("start")
+                    
           },
           new DataGridTextColumn()
           {
@@ -53,7 +57,7 @@ namespace Calculation_Vacation
                     CanUserResize = false,
                     CanUserSort = false,
                     FontSize = 12,
-                    //IsReadOnly = false,
+                    IsReadOnly = false,
                     Binding = new Binding("stop")
           },
           new DataGridTextColumn()
@@ -69,76 +73,155 @@ namespace Calculation_Vacation
           },
         };
 
-        private List<Month_Work> MW_ = new List<Month_Work>();
+        private BindingList<Month_Work> MW_;
 
-        private struct Month_Work
+        public class Month_Work : INotifyPropertyChanged
         {
-            public string month { get; }
-            public DateTime? start { get; set; }
-            public DateTime? stop { get; set; }
-            public int dayofwork { get; }
+            private DateTime _start;
+            private DateTime? _stop;
 
-            public Month_Work(string txt)
+            public string month { get; set; }
+
+            public DateTime start
             {
-                month = txt;
-
+                get
+                {
+                    return _start;
+                }
+                set
+                {
+                    if (_start == value)
+                    {
+                        return;
+                    }
+                    _start = value;
+                    OnpropertiChang( "start" );
+                }
             }
 
+            public DateTime? stop
+            {
+                get
+                {
+                    return _stop;
+                }
+                set
+                {
+                    if( _stop == value)
+                    {
+                        return;
+                    }
+                    _stop = value;
+                    OnpropertiChang( "stop" );
+                }
+            }
+
+            public int dayofwork { get; }
+
+            public Month_Work( string txt )
+            {
+                month = txt;
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            private void OnpropertiChang(string txt = "")
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs (txt));
+            }
         }
 
         public Page_SWD()
         {
+            _dataSaver = new DataSaver();
             InitializeComponent();
-
-        }
-
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
+           
         }
 
         private void DataGrid_Set()
         {
-            for (int i = 0; i < colum.Count; i++)
+            for ( int i = 0; i < colum.Count; i++ )
             {
-                My_DataGrid.Columns.Add(colum[i]);
+                My_DataGrid.Columns.Add( colum[i] );
             }
         }
 
         public void DataGrid_Set_Wieth()
         {
             double wirth_1 = 0;
-            for (int i = 0; i < this.My_DataGrid.Columns.Count; i++)
+            for ( int i = 0; i < this.My_DataGrid.Columns.Count; i++ )
             {
                 wirth_1 += this.My_DataGrid.Columns[i].ActualWidth;
             }
             this.My_DataGrid.Width = wirth_1 + 15;
         }
 
-        private void My_DataGrid_Loaded(object sender, RoutedEventArgs e)
+        private void My_DataGrid_Loaded( object sender, RoutedEventArgs e )
         {
-            DataGrid_Set_Wieth();
-
+            DataGrid_Set_Wieth();            
 
         }
 
-        private void My_DataGrid_Init(object sender, EventArgs e)
+        private void MW__ListChanged( object? sender, ListChangedEventArgs e )
         {
+            if (e.ListChangedType == ListChangedType.ItemChanged )
+            {
+                Txt_test.Text = "sdsdsa";
+            }
+        }
+
+        private void My_DataGrid_Init( object sender, EventArgs e )
+        {
+            
             Month_Work_Set();
             DataGrid_Set();
-            
-
+            MW_.ListChanged += MW__ListChanged;
         }
 
         private void Month_Work_Set()
         {
-            DateTime nowMonth = DateTime.Now;
-
-            for (int i = 1; i <= nowMonth.Month; i++)
+            if ( _dataSaver.TableIsCreate )
             {
-                MW_.Add(new Month_Work(nowMonth.ToString("MMMM")));
+                MW_ = _dataSaver.LoadDate();                
+                My_DataGrid.ItemsSource = MW_;
             }
-            My_DataGrid.ItemsSource = MW_;
+            else
+            {
+                DateTime nowMonth = DateTime.Now;
+                MW_ = new BindingList<Month_Work>();
+
+                for ( int i = 1; i <= nowMonth.Month; i++ )
+                {
+                    MW_.Add( new Month_Work( nowMonth.ToString( "MMMM" ) ) );
+                }
+                My_DataGrid.ItemsSource = MW_;
+            }
+            }
+
+        private void My_DataGrid_BeginningEdit( object sender, DataGridBeginningEditEventArgs e )
+        {
+            
+        }
+
+        private void My_DataGrid_CellEditEnding( object sender, DataGridCellEditEndingEventArgs e )
+        {
+            
+
+        }
+
+        private void My_DataGrid_RowEditEnding( object sender, DataGridRowEditEndingEventArgs e )
+        {
+            var ee = e.Row.Item as Month_Work;
+            ee.start = DateTime.Parse ("06.06.2666");
+            
+
+
+        }
+
+        private void Button_Click( object sender, RoutedEventArgs e )
+        {
+            Txt_test.Text = MW_[0].start.Date.ToShortDateString();
+            _dataSaver.SaveDate( MW_ );
         }
     }
 }
