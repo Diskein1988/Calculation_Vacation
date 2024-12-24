@@ -30,7 +30,7 @@ namespace Calculation_Vacation
             if ( !FileDate )
             {
                 File.CreateText( PATH ).Dispose();
-                return new BindingList<Month_Work> ();
+                return [];
             }
             using (var reader = File.OpenText( PATH ))
             {

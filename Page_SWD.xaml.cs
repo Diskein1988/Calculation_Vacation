@@ -1,9 +1,12 @@
 ﻿using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +27,9 @@ namespace Calculation_Vacation
     public partial class Page_SWD : Window
     {
         private DataSaver _dataSaver;
+        public readonly DependencyProperty TextProperty;
+
+        public int TotalDayWorkInYers {  get; set; }
 
         private List<DataGridColumn> colum = new List<DataGridColumn>()
         {
@@ -70,16 +76,17 @@ namespace Calculation_Vacation
                     CanUserSort = false,
                     FontSize = 13,
                     IsReadOnly = true,
-                    Binding = new Binding("dayofwork")
+                    Binding = new Binding{Path = new PropertyPath("dayofwork"), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, NotifyOnSourceUpdated = true }
           },
         };
 
         private BindingList<Month_Work> MW_ = new BindingList<Month_Work>();
 
-        public class Month_Work : INotifyPropertyChanged
+        public class Month_Work : INotifyPropertyChanged, INotifyCollectionChanged
         {
             private DateTime? _start;
             private DateTime? _stop;
+            private int _dayofwork;
 
             public string month { get; set; }
 
@@ -96,7 +103,7 @@ namespace Calculation_Vacation
                         return;
                     }
                     _start = value;
-                    OnpropertiChang("start");
+                    PropertyIsChanged("start");
                 }
             }
 
@@ -113,11 +120,26 @@ namespace Calculation_Vacation
                         return;
                     }
                     _stop = value;
-                    OnpropertiChang("stop");
+                    PropertyIsChanged("stop");
                 }
             }
 
-            public int dayofwork { get; }
+            public int dayofwork
+            {
+                get
+                {
+                    return _dayofwork;
+                }
+                set
+                {
+                    if (_dayofwork == value)
+                    {
+                        return;
+                    }
+                    _dayofwork = value;
+                    PropertyIsChanged("dayofwork");
+                }
+            }
 
             public Month_Work(string txt)
             {
@@ -126,9 +148,16 @@ namespace Calculation_Vacation
 
             public event PropertyChangedEventHandler? PropertyChanged;
 
-            private void OnpropertiChang(string txt = "")
+            public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+            private void PropertyIsChanged(string txt = "")
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(txt));
+            }
+
+            private void CollectionIsChang(NotifyCollectionChangedAction e)
+            {
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(e));
             }
         }
 
@@ -136,7 +165,14 @@ namespace Calculation_Vacation
         {
             _dataSaver = new DataSaver();
             InitializeComponent();
-
+            TextProperty = DependencyProperty.Register(
+                    "Text1",
+                    typeof(string),
+                    typeof(TextBox),
+                    new FrameworkPropertyMetadata(
+                        string.Empty,
+                        FrameworkPropertyMetadataOptions.AffectsMeasure |
+                        FrameworkPropertyMetadataOptions.AffectsRender));
         }
 
         private void DataGrid_Set()
@@ -147,7 +183,7 @@ namespace Calculation_Vacation
             }
         }
 
-        public void DataGrid_Set_Wieth()
+        private void DataGrid_Set_Wieth()
         {
             double wirth_1 = 0;
             for (int i = 0; i < this.My_DataGrid.Columns.Count; i++)
@@ -167,15 +203,31 @@ namespace Calculation_Vacation
             if (e.ListChangedType == ListChangedType.ItemChanged)
             {
                 Txt_test.Text = "Информация записанна";
+                DayWorkInMonth(sender);
+                TotalDayWork(sender);
+                _dataSaver.SaveDate(MW_);
+                ShowTotalDay.Text = $"Общее количество отработаных дней в году: {TotalDayWorkInYers.ToString()}";
+            }
+        }
+
+        private void MW_ColletionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if(e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                Txt_test.Text = "Произошло что-то что не понятно";
             }
         }
 
         private void My_DataGrid_Init(object sender, EventArgs e)
         {
-
             Month_Work_Set();
             DataGrid_Set();
             MW_.ListChanged += MW_ListChanged;
+        }
+
+        private void MW__ListChanged(object? sender, ListChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Month_Work_Set()
@@ -202,21 +254,18 @@ namespace Calculation_Vacation
 
         private void My_DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-
         }
 
         private void My_DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-
+            var tt = sender as DataGrid;
+            var r = e.EditingElement.Parent;
+            var q = r.ReadLocalValue(TextProperty);
 
         }
 
         private void My_DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-
-
-
-
         }
 
         private void Butt_For_Delet_JSON_Click(object sender, RoutedEventArgs e)
@@ -231,11 +280,40 @@ namespace Calculation_Vacation
             Txt_test.Text = "Сохранение прошло удачно";
         }
 
-        private int DayWorkInMonth (DateTime dt1,  DateTime dt2)
+        private void DayWorkInMonth(object? sender)
         {
-            var daywork = dt2 - dt1;
-            int day = daywork.Days;
-            return day;
+            var Month_Work = sender as BindingList<Month_Work>;
+            foreach (var month in Month_Work)
+            {
+                if (month.start != null && month.stop != null)
+                {
+                    TimeSpan? diff = month.stop - month.start;
+                    month.dayofwork =  (bool)OneDayPlus.IsChecked ? ( diff.Value.Days + 1) : ( diff.Value.Days);
+                }
+            }
+
+        }
+
+        private void TotalDayWork(object? sender)
+        {
+            var Month_Work = sender as BindingList<Month_Work>;
+            int day = 0;
+            foreach (var month in Month_Work)
+            {
+                day += month.dayofwork;
+            }
+            TotalDayWorkInYers = day;
+        }
+
+        private void OneDayPlus_Click(object sender, RoutedEventArgs e)
+        {
+            DayWorkInMonth(this.MW_);
+        }
+
+        private void Show_total_txt_Loaded(object sender, RoutedEventArgs e)
+        {
+            TotalDayWork(this.MW_);
+            ShowTotalDay.Text = $"Общее количество отработаных дней в году: {TotalDayWorkInYers.ToString()}";
         }
     }
 }
