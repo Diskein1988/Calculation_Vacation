@@ -27,7 +27,6 @@ namespace Calculation_Vacation
     public partial class Page_SWD : Window
     {
         private DataSaver _dataSaver;
-        public readonly DependencyProperty TextProperty;
 
         public int TotalDayWorkInYers {  get; set; }
 
@@ -53,7 +52,10 @@ namespace Calculation_Vacation
                     CanUserSort = false,
                     FontSize = 13,
                     IsReadOnly = false,
-                    Binding = new Binding {Path = new PropertyPath("start"), StringFormat ="dd.MMMM"}
+                    Binding = new Binding {
+                        Path = new PropertyPath("start"), 
+                        StringFormat ="dd.MMMM",
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
 
           },
           new DataGridTextColumn()
@@ -65,7 +67,10 @@ namespace Calculation_Vacation
                     CanUserSort = false,
                     FontSize = 13,
                     IsReadOnly = false,
-                    Binding = new Binding{Path = new PropertyPath("stop"), StringFormat ="dd.MMMM"}
+                    Binding = new Binding{
+                        Path = new PropertyPath("stop"), 
+                        StringFormat ="dd.MMMM", 
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
           },
           new DataGridTextColumn()
           {
@@ -76,7 +81,10 @@ namespace Calculation_Vacation
                     CanUserSort = false,
                     FontSize = 13,
                     IsReadOnly = true,
-                    Binding = new Binding{Path = new PropertyPath("dayofwork"), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, NotifyOnSourceUpdated = true }
+                    Binding = new Binding{
+                        Path = new PropertyPath("dayofwork"), 
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, 
+                        NotifyOnSourceUpdated = true }
           },
         };
 
@@ -165,14 +173,6 @@ namespace Calculation_Vacation
         {
             _dataSaver = new DataSaver();
             InitializeComponent();
-            TextProperty = DependencyProperty.Register(
-                    "Text1",
-                    typeof(string),
-                    typeof(TextBox),
-                    new FrameworkPropertyMetadata(
-                        string.Empty,
-                        FrameworkPropertyMetadataOptions.AffectsMeasure |
-                        FrameworkPropertyMetadataOptions.AffectsRender));
         }
 
         private void DataGrid_Set()
@@ -258,9 +258,11 @@ namespace Calculation_Vacation
 
         private void My_DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            var tt = sender as DataGrid;
-            var r = e.EditingElement.Parent;
-            var q = r.ReadLocalValue(TextProperty);
+            var test = e.Row.Item as Month_Work;
+            if (test.start == null )
+            {
+                test.start = DateTime.Now;
+            }
 
         }
 
