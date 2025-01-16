@@ -10,12 +10,15 @@ namespace Calculation_Vacation
     {
         public string Dayofyers { get; }
         public int Work_Months { get; }
+        public string BeginningOfYear { get; }
+
         DateTime nowDate = DateTime.Now;
 
         public Calendar()
         {
             Dayofyers = calc_dayofyers();
             Work_Months = nowDate.Month;
+            BeginningOfYear = Beginning_Of_Year();
         }
 
         private string calc_dayofyers()
@@ -37,7 +40,7 @@ namespace Calculation_Vacation
                 {
                     int day_of_work = int.Parse(day.Trim());
 
-                    if (day_of_work <= 364)
+                    if (day_of_work <= 365)
                     {
                         int day_dop_otpusk = Convert.ToInt32(Math.Round(0.043 * day_of_work));
                         return day_dop_otpusk.ToString();
@@ -77,6 +80,12 @@ namespace Calculation_Vacation
             return true;
         } //Проверка на цифры
 
+        private string Beginning_Of_Year()
+        {
+            DateTime current = DateTime.Now;
+            int year = current.Year;
+            return new DateTime( year, 1, 1 ).ToString("dd.MM");
+        }
 
     }
 }

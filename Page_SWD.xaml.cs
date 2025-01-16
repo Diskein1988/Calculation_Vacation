@@ -28,9 +28,9 @@ namespace Calculation_Vacation
     {
         private DataSaver _dataSaver;
 
-        public int TotalDayWorkInYers {  get; set; }
+        public int TotalDayWorkInYears { get; set; }
 
-        private List<DataGridColumn> colum = new List<DataGridColumn>()
+        private List<DataGridColumn> columns = new List<DataGridColumn>()
         {
           new DataGridTextColumn()
           {
@@ -53,7 +53,7 @@ namespace Calculation_Vacation
                     FontSize = 13,
                     IsReadOnly = false,
                     Binding = new Binding {
-                        Path = new PropertyPath("start"), 
+                        Path = new PropertyPath("start"),
                         StringFormat ="dd.MMMM",
                         UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
 
@@ -68,13 +68,13 @@ namespace Calculation_Vacation
                     FontSize = 13,
                     IsReadOnly = false,
                     Binding = new Binding{
-                        Path = new PropertyPath("stop"), 
-                        StringFormat ="dd.MMMM", 
+                        Path = new PropertyPath("stop"),
+                        StringFormat ="dd.MMMM",
                         UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
           },
           new DataGridTextColumn()
           {
-                    Header = "Кол-во отработаных дней в месяце",
+                    Header = "Кол-во отработанных дней в месяце",
                     Width = DataGridLength.SizeToHeader,
                     CanUserReorder = false,
                     CanUserResize = false,
@@ -82,8 +82,8 @@ namespace Calculation_Vacation
                     FontSize = 13,
                     IsReadOnly = true,
                     Binding = new Binding{
-                        Path = new PropertyPath("dayofwork"), 
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, 
+                        Path = new PropertyPath("dayofwork"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                         NotifyOnSourceUpdated = true }
           },
         };
@@ -106,12 +106,12 @@ namespace Calculation_Vacation
                 }
                 set
                 {
-                    if (_start == value)
+                    if ( _start == value )
                     {
                         return;
                     }
                     _start = value;
-                    PropertyIsChanged("start");
+                    PropertyIsChanged( "start" );
                 }
             }
 
@@ -123,12 +123,12 @@ namespace Calculation_Vacation
                 }
                 set
                 {
-                    if (_stop == value)
+                    if ( _stop == value )
                     {
                         return;
                     }
                     _stop = value;
-                    PropertyIsChanged("stop");
+                    PropertyIsChanged( "stop" );
                 }
             }
 
@@ -140,16 +140,17 @@ namespace Calculation_Vacation
                 }
                 set
                 {
-                    if (_dayofwork == value)
+                    if ( _dayofwork == value )
                     {
                         return;
                     }
                     _dayofwork = value;
-                    PropertyIsChanged("dayofwork");
+                    PropertyIsChanged( "dayofwork" );
+                    CollectionIsChang( NotifyCollectionChangedAction.Reset );
                 }
             }
 
-            public Month_Work(string txt)
+            public Month_Work( string txt )
             {
                 month = txt;
             }
@@ -158,14 +159,14 @@ namespace Calculation_Vacation
 
             public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
-            private void PropertyIsChanged(string txt = "")
+            private void PropertyIsChanged( string txt = "" )
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(txt));
+                PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( txt ) );
             }
 
-            private void CollectionIsChang(NotifyCollectionChangedAction e)
+            private void CollectionIsChang( NotifyCollectionChangedAction e )
             {
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(e));
+                CollectionChanged?.Invoke( this, new NotifyCollectionChangedEventArgs( e ) );
             }
         }
 
@@ -177,145 +178,173 @@ namespace Calculation_Vacation
 
         private void DataGrid_Set()
         {
-            for (int i = 0; i < colum.Count; i++)
+            for ( int i = 0; i < columns.Count; i++ )
             {
-                My_DataGrid.Columns.Add(colum[i]);
+                My_DataGrid.Columns.Add( columns[i] );
             }
         }
 
-        private void DataGrid_Set_Wieth()
+        private void DataGrid_Set_Width()
         {
             double wirth_1 = 0;
-            for (int i = 0; i < this.My_DataGrid.Columns.Count; i++)
+            for ( int i = 0; i < this.My_DataGrid.Columns.Count; i++ )
             {
                 wirth_1 += this.My_DataGrid.Columns[i].ActualWidth;
             }
-            this.My_DataGrid.Width = wirth_1 + 15;
+            this.My_DataGrid.Width = wirth_1 + 13;
         }
 
-        private void My_DataGrid_Loaded(object sender, RoutedEventArgs e)
+        private void My_DataGrid_Loaded( object sender, RoutedEventArgs e )
         {
-            DataGrid_Set_Wieth();
+            DataGrid_Set_Width();
         }
 
-        private void MW_ListChanged(object? sender, ListChangedEventArgs e)
+        private void MW_ListChanged( object? sender, ListChangedEventArgs e )
         {
-            if (e.ListChangedType == ListChangedType.ItemChanged)
+            if ( e.ListChangedType == ListChangedType.ItemChanged )
             {
-                Txt_test.Text = "Информация записанна";
-                DayWorkInMonth(sender);
-                TotalDayWork(sender);
-                _dataSaver.SaveDate(MW_);
-                ShowTotalDay.Text = $"Общее количество отработаных дней в году: {TotalDayWorkInYers.ToString()}";
+                Txt_test.Text = "Информация записана";
+                DayWorkInMonth( sender );
+                TotalDayWork( sender );
+                _dataSaver.SaveDate( MW_ );
+                ShowTotalDay.Text = $"Общее количество отработанных дней в году: {TotalDayWorkInYears.ToString()}";
             }
         }
 
-        private void MW_ColletionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void MW_CollectionChanged( object? sender, NotifyCollectionChangedEventArgs e )
         {
-            if(e.Action == NotifyCollectionChangedAction.Replace)
+            if ( e.Action == NotifyCollectionChangedAction.Reset )
             {
                 Txt_test.Text = "Произошло что-то что не понятно";
             }
         }
 
-        private void My_DataGrid_Init(object sender, EventArgs e)
+        private void My_DataGrid_Init( object sender, EventArgs e )
         {
-            Month_Work_Set();
+            Month_Work_Set( MainWindow.GetInstance.Start_work );
             DataGrid_Set();
             MW_.ListChanged += MW_ListChanged;
+            //MW_[0].CollectionChanged += MW_CollectionChanged;
         }
 
-        private void MW__ListChanged(object? sender, ListChangedEventArgs e)
+        private void MW__ListChanged( object? sender, ListChangedEventArgs e )
         {
             throw new NotImplementedException();
         }
 
-        private void Month_Work_Set()
+        private void Month_Work_Set( DateTime date )
         {
-            if (_dataSaver.TableIsCreate)
+            DateTime nowMonth = DateTime.Now;
+
+            if ( _dataSaver.TableIsCreate )
             {
-                MW_ = _dataSaver.LoadDate();
-                My_DataGrid.ItemsSource = MW_;
+                BindingList<Month_Work> temp_MW = _dataSaver.LoadDate();
+
+                if ( temp_MW.Count == nowMonth.Month )
+                {
+                    My_DataGrid.ItemsSource = MW_ = temp_MW;
+                }
+
+                else if ( temp_MW.Count < nowMonth.Month )
+                {
+                    int diff = nowMonth.Month - temp_MW.Count;
+                    DateTime dateOnly = new DateTime( nowMonth.Year, temp_MW.Count + 1, 1 );
+
+                    for ( int i = 0; i < diff; i++ )
+                    {
+                        temp_MW.Add( new Month_Work( dateOnly.ToString( "MMMM" ) ) );
+                        dateOnly = dateOnly.AddMonths( 1 );
+                    }
+
+                    My_DataGrid.ItemsSource = MW_ = temp_MW;
+                }
+
             }
             else
             {
-                DateTime nowMonth = DateTime.Now;
-                DateOnly dateOnly = new DateOnly(2024, 01, 01);
-                var test = dateOnly;
-
-                for (int i = 1; i <= nowMonth.Month; i++)
+                for ( int i = 1; i <= nowMonth.Month; i++ )
                 {
-                    MW_.Add(new Month_Work(test.ToString("MMMM")));
-                    test = dateOnly.AddMonths(i);
+                    MW_.Add( new Month_Work( date.ToString( "MMMM" ) ) );
+                    date = date.AddMonths( 1 );
                 }
                 My_DataGrid.ItemsSource = MW_;
             }
         }
 
-        private void My_DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-        }
-
-        private void My_DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            var test = e.Row.Item as Month_Work;
-            if (test.start == null )
-            {
-                test.start = DateTime.Now;
-            }
-
-        }
-
-        private void My_DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-        }
-
-        private void Butt_For_Delet_JSON_Click(object sender, RoutedEventArgs e)
+        private void Butt_For_Delete_JSON_Click( object sender, RoutedEventArgs e )
         {
             _dataSaver.DeletData();
             Txt_test.Text = "База данных сброшена";
         }
 
-        private void Butt_to_Save_JSON_Click(object sender, RoutedEventArgs e)
+        private void Butt_to_Save_JSON_Click( object sender, RoutedEventArgs e )
         {
-            _dataSaver.SaveDate(MW_);
+            _dataSaver.SaveDate( MW_ );
             Txt_test.Text = "Сохранение прошло удачно";
         }
 
-        private void DayWorkInMonth(object? sender)
+        private void DayWorkInMonth( object? sender )
         {
             var Month_Work = sender as BindingList<Month_Work>;
-            foreach (var month in Month_Work)
+            foreach ( var month in Month_Work )
             {
-                if (month.start != null && month.stop != null)
+                if ( month.start != null && month.stop != null )
                 {
                     TimeSpan? diff = month.stop - month.start;
-                    month.dayofwork =  (bool)OneDayPlus.IsChecked ? ( diff.Value.Days + 1) : ( diff.Value.Days);
+                    month.dayofwork = (bool)OneDayPlus.IsChecked ? ( diff.Value.Days + 1 ) : diff.Value.Days;
                 }
             }
 
         }
 
-        private void TotalDayWork(object? sender)
+        private void TotalDayWork( object? sender )
         {
             var Month_Work = sender as BindingList<Month_Work>;
             int day = 0;
-            foreach (var month in Month_Work)
+            foreach ( var month in Month_Work )
             {
                 day += month.dayofwork;
             }
-            TotalDayWorkInYers = day;
+            TotalDayWorkInYears = day;
         }
 
-        private void OneDayPlus_Click(object sender, RoutedEventArgs e)
+        private void OneDayPlus_Click( object sender, RoutedEventArgs e )
         {
-            DayWorkInMonth(this.MW_);
+            DayWorkInMonth( this.MW_ );
         }
 
-        private void Show_total_txt_Loaded(object sender, RoutedEventArgs e)
+        private void OneDayPlus_Initialized( object sender, EventArgs e )
         {
-            TotalDayWork(this.MW_);
-            ShowTotalDay.Text = $"Общее количество отработаных дней в году: {TotalDayWorkInYers.ToString()}";
+            var check = sender as CheckBox;
+            if ( this.MW_[0].start.HasValue && this.MW_[0].stop.HasValue )
+            {
+                bool b = ( this.MW_[0]?.stop.Value.Day - this.MW_[0]?.start.Value.Day ) < this.MW_[0].dayofwork;
+                if ( b )
+                {
+                    check.IsChecked = true;
+                }
+                else
+                {
+                    check.IsChecked = false;
+                }
+            }
+            else
+            {
+                check.IsChecked = false;
+            }
         }
+
+        private void Show_total_txt_Loaded( object sender, RoutedEventArgs e )
+        {
+            TotalDayWork( this.MW_ );
+            ShowTotalDay.Text = $"Общее количество отработанных дней в году: {TotalDayWorkInYears.ToString()}";
+        }
+
+        private void Page_Set_Work_Day_Closed( object sender, EventArgs e )
+        {
+            MainWindow.GetInstance.WorkDay.Text = TotalDayWorkInYears.ToString();
+        }
+
+
     }
 }
