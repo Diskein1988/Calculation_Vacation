@@ -23,7 +23,25 @@
         <TextBlock x:Name="gone_days" HorizontalAlignment="Left" Height="21" Margin="232,132,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" FontFamily="Times New Roman" FontWeight="Bold" Text="Day"/>
         <TextBox x:Name="WorkDay" HorizontalAlignment="Left" Height="21" Margin="232,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" RenderTransformOrigin="0.5,0.575" Text="1" FontFamily="Times New Roman" FontWeight="Bold" BorderBrush="Black" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Height="21" Margin="10,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" FontFamily="Times New Roman" TextAlignment="Right" FontSize="14"><Run Text="Кол-во отработаных дней в году"/><Run Language="ru-ru" Text=":"/><LineBreak/><Run/></TextBlock>
-        <Button x:Name="Calculate_Go" Content="Рассчитать" HorizontalAlignment="Center" Height="36" Margin="0,348,0,0" VerticalAlignment="Top" Width="160" Click="Button_Click_Calculate" FontFamily="Times New Roman" FontSize="18" Foreground="#FFE23131" HorizontalContentAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" MouseEnter="Calculate_Go_MouseEnter" BorderBrush="Black">
+        <Button x:Name="Calculate_Go" Content="Рассчитать" HorizontalAlignment="Center" Height="36" Margin="0,348,0,0" VerticalAlignment="Top" Width="160" Click="Button_Click_Calculate" FontFamily="Times New Roman" FontSize="18" Foreground="#FFE23131" HorizontalContentAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" MouseEnter="Calculate_Go_MouseEnter" BorderBrush="Black" AutomationProperties.IsOffscreenBehavior="Offscreen" BorderThickness="1,1,1,1" ClipToBounds="True">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="5"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}">
+
+                        <Border.Background>
+                            <SolidColorBrush x:Name="BorderColor" Color="White" Opacity="2" />
+                        </Border.Background>
+                        <ContentControl Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
             <Button.FocusVisualStyle>
                 <Style/>
             </Button.FocusVisualStyle>
@@ -37,7 +55,7 @@
         <TextBlock HorizontalAlignment="Left" Height="21" Margin="10,247,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" FontFamily="Times New Roman" TextAlignment="Right" FontSize="14"><Run Language="ru-ru" Text="Дней доп. отпуска:"/><LineBreak/><Run Language="ru-ru"/></TextBlock>
         <TextBlock x:Name="Day_OSN" HorizontalAlignment="Left" Height="20" Margin="232,222,0,0" VerticalAlignment="Top" Width="62" FontWeight="Bold" FontFamily="Times New Roman" Foreground="Red" FontSize="14"/>
         <TextBlock x:Name="DAY_DOP" HorizontalAlignment="Left" Height="18" Margin="232,249,0,0" VerticalAlignment="Top" Width="62" FontFamily="Times New Roman" FontWeight="Bold" Foreground="Red" FontSize="14"/>
-        <Button x:Name="Set_Work_Day" Content="Выбрать дни работы" HorizontalAlignment="Left" Height="28" Margin="10,187,0,0" VerticalAlignment="Top" Width="284" FontFamily="Times New Roman" FontWeight="Bold" Click="Button_Click_Set_Work_Day" FontSize="16"/>
+        <Button x:Name="Set_Work_Day" Content="Выбрать дни работы" HorizontalAlignment="Left" Height="28" Margin="10,187,0,0" VerticalAlignment="Top" Width="284" FontFamily="Times New Roman" FontWeight="Bold" Click="Button_Click_Set_Work_Day" FontSize="16" Initialized="Set_Work_Day_Initialized"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" FontFamily="Times New Roman" Height="21" TextAlignment="Right" FontSize="14"><Run Text="Дата начала "/><Run Language="ru-ru" Text="расчёта"/><Run Text=":"/></TextBlock>
         <TextBox x:Name="start_to" HorizontalAlignment="Left" Margin="232,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87" Height="21" FontFamily="Times New Roman" FontWeight="Bold" TextChanged="start_to_TextChanged" Language="ru-RU" BorderBrush="Black" FontSize="14"/>
         <TextBlock x:Name="Text_TextBox" HorizontalAlignment="Center" Margin="0,304,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="25" Width="160" FontSize="16" TextAlignment="Center"/>
@@ -85,7 +103,7 @@
         <Button x:Name="myButton" Content="Привет" Height="40" Width="100">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="55"
+                    <Border CornerRadius="12"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 Height="{TemplateBinding Height}"

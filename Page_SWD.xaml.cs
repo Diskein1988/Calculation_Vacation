@@ -316,7 +316,7 @@ namespace Calculation_Vacation
         private void OneDayPlus_Initialized( object sender, EventArgs e )
         {
             var check = sender as CheckBox;
-            if ( this.MW_[0].start.HasValue && this.MW_[0].stop.HasValue )
+            if ( this.MW_[0]!.start.HasValue && this.MW_[0]!.stop.HasValue )
             {
                 bool b = ( this.MW_[0]?.stop.Value.Day - this.MW_[0]?.start.Value.Day ) < this.MW_[0].dayofwork;
                 if ( b )

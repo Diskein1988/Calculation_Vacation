@@ -148,5 +148,10 @@ namespace Calculation_Vacation
             brush.BeginAnimation( SolidColorBrush.ColorProperty, animation );
 
         }
+
+        private void Set_Work_Day_Initialized(object sender, EventArgs e)
+        {
+
+        }
     }
 }
